@@ -5,7 +5,7 @@
 2. Confirm your email for the Community Account to create a password.
 3. Open the Alexa App on your mobile device. Install the [Google Play](https://play.google.com/store/apps/details?id=com.amazon.dee.app&hl=en) or [Apple](https://itunes.apple.com/ca/app/amazon-alexa/id944011620?mt=8) App.
 4. Go to the Skills Page.
-5. Select My Skills. ![FirstScreenshot](Screenshot_2018-01-08-16-53-11.png)
+5. Select My Skills.
 6. Select the Town of Cary Skill for installation.
 7. Select Link Account.
 8. Enter the username and password for your Town of Cary Community Account.
