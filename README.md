@@ -15,3 +15,11 @@ What are the list of skills?
 https://services.townofcary.org/TOC_AlexaSkill
 
 ## How to Provide Feedback
+1. Create a [Github Account](https://github.com/).
+2. Go the [Alexa-Skill repository](https://github.com/TownOfCary/Alexa-Skill).
+3. Go to the Issues tab from the project.
+4. Submit a new issue by clicking "New issue".
+
+OR
+
+1. Access the [Alexa Feedback] shared document and post your feedback.
