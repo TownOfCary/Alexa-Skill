@@ -1,7 +1,7 @@
 # Alexa-Skill
 ## Install Instructions:
 
-1. Sign up for a [https://services.townofcary.org/CommunitiesSelfReg](Town of Cary Community Account) on our portal site.  If you already have an Account skip to step 3.
+1. Sign up for a [Town of Cary Community Account](https://services.townofcary.org/CommunitiesSelfReg) on our portal site.  If you already have an Account skip to step 3.
 2. Confirm your email for the Community Account to create a password.
 3. Open the Alexa App on your mobile device.
 4. Go to the Skills Page.
