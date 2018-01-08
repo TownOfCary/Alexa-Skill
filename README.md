@@ -22,4 +22,4 @@ https://services.townofcary.org/TOC_AlexaSkill
 
 OR
 
-1. Access the [Alexa Feedback] shared document and post your feedback.
+1. Access the [Alexa Feedback](https://townofcary-my.sharepoint.com/personal/nicole_raimundo_townofcary_org/_layouts/15/guestaccess.aspx?docid=1f707f1c8a4c841aaa914054af14ba1a6&authkey=AXCr9VRnuKV7mHaZ28bXazo&e=DCsJ38) shared document and post your feedback.
