@@ -9,3 +9,7 @@
 6. Select the Town of Cary Skill for installation.
 7. Select Link Account.
 8. Enter the username and password for your Town of Cary Community Account.
+
+## Alexa Skill Commands
+What are the list of skills?
+https://services.townofcary.org/TOC_AlexaSkill
