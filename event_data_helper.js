@@ -18,6 +18,8 @@ EventDataHelper.prototype.requestEventData = function(uri, startDate, endDate) {
     //   item.Location = helperClass.EVENTLOCATIONS[item.CategoryID];
     // });
     // return json;
+    console.log(response);
+    console.log(json);
     return self.promiseWhile(uri, json, 0);
   }).catch(function(err) {
     console.log('Error in api call');
@@ -39,7 +41,7 @@ EventDataHelper.prototype.calendarEventFind = function(uri, startDate, endDate){
       EndDate: endDate,
       Filter: null,
       PageIndex: '1',
-      PageSize: '8',
+      PageSize: '6',
       StartDate: startDate
    }
   };
@@ -103,16 +105,21 @@ EventDataHelper.prototype.formatEventData = function(sampleReturn) {
     return 'There are no scheduled events for that day';
   } else {
     eventContent.forEach(function(item) {
-      eventData += _.template('${eventTitle} starts at ${eventStart}, and ends at ${eventEnd} at ${eventLocation}. ')({
+      console.log(item);
+      var location = (item.Location === null || item.Location === undefined) ? ' ' : 'at ' + item.Location;
+      console.log(location);
+      eventData += _.template('${eventTitle} starts at ${eventStart}, and ends at ${eventEnd} ${eventLocation}. ')({
         eventStart: helperClass.formatTimeString(Date.parse(item.StartDate)),
         eventEnd: helperClass.formatTimeString(Date.parse(item.EndDate)),
         eventTitle: item.Title,
-        eventLocation: item.Location
+        eventLocation: location
       });
     });
-    response = _.template('On ${date} there are ${count} events: ${eventData}')({
+    response = _.template('On ${date} there ${prep} ${count} event${s}: ${eventData}')({
       date: helperClass.formatDate(Date.parse(eventContent[0].StartDate)),
+      prep:  helperClass.getPrepostion(eventCount),
       count: eventCount,
+      s: eventCount >= 2 ? 's' : '',
       eventData: eventData
     });
 

@@ -4,7 +4,7 @@ var rp = require('request-promise');
 require('./jsDate.js')();
 require('datejs');
 const feedparser = require('feedparser-promised');
-const url = 'http://www.townofcary.org/Home/Components/RssFeeds/RssFeed/View?ctID=5&&cateIDs=64';
+const url = 'https://www.townofcary.org/Home/Components/RssFeeds/RssFeed/View?ctID=5&cateIDs=64';
 
 function RSSFeedHelper() { }
 
@@ -15,7 +15,9 @@ function dateFilter(value) {
 
 RSSFeedHelper.prototype.requestRSSFeed = function() {
   var feedData = [];
-  return feedparser.parse(encodeURI(url)).then( (items) => {
+  console.log(url);
+  return feedparser.parse(url).then( (items) => {
+    console.log(items);
     feedData = items.filter(dateFilter);
 
     if(feedData[0] == undefined) {
