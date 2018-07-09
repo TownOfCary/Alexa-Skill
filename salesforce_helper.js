@@ -78,7 +78,7 @@ var CASEISSUEMATCHING = {
 	'LEAVES': 'Leaf Collection'
 }
 
-class salesforceHelper{
+class SalesforceHelper{
 
 	constructor(){}
 
