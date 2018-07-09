@@ -130,10 +130,11 @@ formatEventData(sampleReturn) {
   };
 }
 
-var counter = Promise.method(function(i){
-    return i + 1;
-});
-
+  counter(i){
+    return Promise.method(function(i) {
+        return i + 1;
+    });
+  }
 }
 
 module.exports = EventDataHelper;
