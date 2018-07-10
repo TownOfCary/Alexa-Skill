@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "alexa-sdk": "1.x",
+    "aws-sdk": "^2.270.1",
     "bluebird": "^3.5.0",
     "datejs": "^1.0.0-rc3",
     "feedparser-promised": "^1.2.1",
