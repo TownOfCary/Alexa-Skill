@@ -6,6 +6,7 @@ var EsriDataHelper = require('./esri_data_helper');
 var HelperClass = require('./helper_functions.js');
 var ESRIENDPOINT = 'https://maps.townofcary.org/arcgis1/rest/services/';
 require('datejs');
+let instance = null;
 //salesforce community login URL
 var INSTANCE_URL = process.env.SALESFORCEURL;
 var SALESFORCE_V = process.env.SALESFORCEVERSION;
@@ -80,7 +81,17 @@ var CASEISSUEMATCHING = {
 
 class SalesforceHelper{
 
-	constructor(){}
+	constructor() {
+    if (instance) return instance;
+
+    instance = this;
+
+    return instance;
+  }
+
+  static getInstance() {
+    return instance || new SteamBot();
+  }
 
 	get ESRIENDPOINT() {
     return ESRIDATAENDPOINT;
@@ -107,7 +118,7 @@ createCaseInSalesforce(userToken, caseIssue) {
 		accessToken : userToken,
 		version: SALESFORCE_V
 	});
-  return getContactId(userToken).then(function(results){
+  return this.getContactId(userToken).then(function(results){
 			console.log('got contactId: ' + results);
       obj.ContactId = results
       return conn.query("Select Id from Case_Issue__c where Name LIKE '%" + CASEISSUEMATCHING[caseIssue.toUpperCase()] + "%'");
@@ -144,7 +155,7 @@ findLatestCaseStatus(userToken, caseIssue) {
 		accessToken : userToken,
 		version: SALESFORCE_V
 	});
-	return getContactId(userToken).then(function(results){
+	return this.getContactId(userToken).then(function(results){
 		var q = '';
 		if(caseIssue == undefined){
 			q = "ContactId = '" + results + "'";
@@ -224,7 +235,7 @@ getUserAddress(userToken) {
 		accessToken : userToken,
 		version: SALESFORCE_V
 	});
-	return getContactId(userToken).then(function(results){
+	return this.getContactId(userToken).then(function(results){
 		return conn.query("Select MailingStreet, MailingLatitude, MailingLongitude From Contact Where Id = '" + results +"'" );
 	}).then(function(results){
 		console.log(results);

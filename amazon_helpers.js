@@ -1,7 +1,7 @@
 'use strict';
-class AmazonHelpers
-{
-  var ua = require('universal-analytics');
+const ua = require('universal-analytics');
+
+class AmazonHelpers{
 
   static RepeatIntent(google_id, user_id, event1, attr)
   {

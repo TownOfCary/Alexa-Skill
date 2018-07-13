@@ -5,10 +5,20 @@ require('./jsDate.js')();
 require('datejs');
 const feedparser = require('feedparser-promised');
 const url = 'https://www.townofcary.org/Home/Components/RssFeeds/RssFeed/View?ctID=5&cateIDs=64';
-
+let instance = null;
 class RSSFeedHelper{
 
-  constructor(){}
+  constructor() {
+    if (instance) return instance;
+
+    instance = this;
+
+    return instance;
+  }
+
+  static getInstance() {
+    return instance || new SteamBot();
+  }
 
 dateFilter(value) {
   var yesterday = new Date(new Date().getTime() - (24 * 60 * 60 * 1000));

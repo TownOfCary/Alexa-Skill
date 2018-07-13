@@ -14,7 +14,7 @@ describe('OpenDataHelper', function() {
       it('returns gym times on current date', function() {
         var today = new Date('2017-03-24');
         var open_gym_date = today.toISOString().substring(0,10);
-        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + '&facet=community_center&timezone=America/New_York&exclude.community_center=CAC';
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=date_scanned==' + open_gym_date + '&facet=community_center&timezone=America/New_York&exclude.community_center=CAC';
         var value = subject.requestOpenData(uri).then(function(obj) {
           return obj.records[0].fields.date_scanned;
         });
@@ -28,7 +28,7 @@ describe('OpenDataHelper', function() {
         var today = new Date('2017-01-10');
         var open_gym_date = today.toISOString().substring(0,10);
         var location = 'BPCC';
-        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + ' AND community_center==' + location +  '&facet=community_center&timezone=America/New_York&exclude.community_center=CAC';
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=date_scanned==' + open_gym_date + ' AND community_center==' + location +  '&facet=community_center&timezone=America/New_York&exclude.community_center=CAC';
         var value = subject.requestOpenData(uri).then(function(obj) {
           return obj.records.length;
         });
@@ -44,7 +44,7 @@ describe('OpenDataHelper', function() {
           "open-gym"
         ],
         "timezone": "UTC",
-        "q": "open_gym_start == '2017-01-06",
+        "q": "date_scanned == '2017-01-06",
         "rows": 10,
         "format": "json",
         "facet": [
@@ -100,7 +100,7 @@ describe('OpenDataHelper', function() {
     };
     context('with multiple gym times', function() {
       it('formats the status as expected', function() {
-        expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on Fri Jan 06. At BOND PARK the times are: 03:30:00 PM to 05:30:00 PM for Basketball. 09:00:00 AM to 12:30:00 PM for Pickleball.');
+        expect(subject.formatGymTimes(status)).to.eq('There are 2 open gym times on Fri Jan 6. At BOND PARK the times are: 03:30:00 PM to 05:30:00 PM for Basketball. 09:00:00 AM to 12:30:00 PM for Pickleball.');
       });
     });
     context('with no gym times', function() {
@@ -272,7 +272,7 @@ describe('OpenDataHelper', function() {
       it('returns studio times on date', function() {
         var today = new Date('2017-04-12');
         var open_gym_date = today.toISOString().substring(0,10);
-        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start==' + open_gym_date + '&facet=community_center&timezone=America/New_York&refine.community_center=CAC';
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=date_scanned==' + open_gym_date + '&facet=community_center&timezone=America/New_York&refine.community_center=CAC';
         return subject.requestOpenData(uri).then(function(obj) {
           return expect(obj.records.length).to.eq(1) && expect(obj.records[0].fields.facility_title).to.eq('Cary Arts Center');
         });
@@ -284,7 +284,7 @@ describe('OpenDataHelper', function() {
       it('returns studio times on date', function() {
         var today = new Date('2017-04-12');
         var open_gym_date = today.toISOString().substring(0,10);
-        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start>=' + open_gym_date + '&facet=community_center&rows=1&sort=-date_scanned&timezone=America/New_York&refine.community_center=CAC';
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=date_scanned>=' + open_gym_date + '&facet=community_center&rows=1&sort=-date_scanned&timezone=America/New_York&refine.community_center=CAC';
         return subject.requestOpenData(uri).then(function(obj) {
           return expect(obj.records[0].fields.date_scanned).to.eq('2017-04-12') && expect(obj.records.length).to.eq(1);
         });
@@ -294,7 +294,7 @@ describe('OpenDataHelper', function() {
       it('returns the next date when there is a session', function() {
         var today = new Date('2017-04-14');
         var open_gym_date = today.toISOString().substring(0,10);
-        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=open_gym_start>=' + open_gym_date + '&facet=community_center&rows=1&sort=-date_scanned&timezone=America/New_York&refine.community_center=CAC';
+        var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=date_scanned>=' + open_gym_date + '&facet=community_center&rows=1&sort=-date_scanned&timezone=America/New_York&refine.community_center=CAC';
         return subject.requestOpenData(uri).then(function(obj) {
           return expect(obj.records.length).to.eq(1) && expect(obj.records[0].fields.date_scanned).to.eq('2017-04-17');
         });

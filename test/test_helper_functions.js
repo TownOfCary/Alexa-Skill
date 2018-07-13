@@ -15,7 +15,7 @@ describe('HelperClass', function() {
       var dateTime = Date.parse('Wed Mar 08 2017 14:28:36');
       it('returns date time formated for alexa response', function() {
         var value = subject.formatDateTime(dateTime);
-        return expect(value).to.eq('Wed Mar 08 at 02:28:36 PM');
+        return expect(value).to.eq('Wed Mar 8 at 02:28:36 PM');
       });
     });
   });
@@ -33,7 +33,7 @@ describe('HelperClass', function() {
       var dateTime = Date.parse('Wed Mar 08 2017 14:28:36');
       it('returns time formated in 12 hour time', function() {
         var value = subject.formatDate(dateTime);
-        return expect(value).to.eq('Wed Mar 08');
+        return expect(value).to.eq('Wed Mar 8');
       });
     });
   });

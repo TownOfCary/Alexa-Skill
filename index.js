@@ -97,9 +97,9 @@ var newSessionHandlers = {
 
     var q = '';
     if(location === undefined){
-      q = 'open_gym_start==' + gymTimeDate;
+      q = 'date_scanned==' + gymTimeDate;
     } else {
-      q = 'open_gym_start==' + gymTimeDate + ' AND community_center==' + GYMLOCATIONS[location.toUpperCase()];
+      q = 'date_scanned==' + gymTimeDate + ' AND community_center==' + GYMLOCATIONS[location.toUpperCase()];
     }
     var uri = OPENDATAENDPOINT + 'dataset=open-gym&q=' + q + '&facet=community_center&timezone=America/New_York&exclude.community_center=CAC';
     openDataHelper.requestOpenData(uri).then(function(gymTimeStatus) {
@@ -437,8 +437,10 @@ var newSessionHandlers = {
     var uri = EVENTDATAENDPOINT;
     var eventDataHelper = new EventDataHelper();
     eventDataHelper.requestEventData(uri, startDate, endDate).then(function(response){
+      console.log(response);
       return eventDataHelper.formatEventData(response);
     }).then(function(response){
+      console.log(response);
       intentTrackingID.event("UpcomingCaryEventsIntent","Success","Request: " + JSON.stringify(self.event.request) + " Attributes: " + JSON.stringify(self.attributes)).send();
       prompt = scrub(response);
       console.log(prompt);

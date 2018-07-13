@@ -1,16 +1,28 @@
 'use strict';
-var _ = require('lodash');
-var rp = require('request-promise');
-var HelperClass = require('./helper_functions.js');
-var promise = require('bluebird');
+const _ = require('lodash');
+const rp = require('request-promise');
+const HelperClass = require('./helper_functions.js');
+const promise = require('bluebird');
+const promisify = require('util').promisify;
 require('./jsDate.js');
 require('datejs');
-var FIELDSTATUSENDPOINT = 'http://games.townofcarync.gov';
-var FIELDTYPES = ['/ballfields/ballfields.txt', '/multipurposefields/multipurposefields.txt', '/gymnasiums/gymnasiums.txt', '/soccerpark/soccerpark.txt', '/usabaseball/usabaseball.txt'];
+const FIELDSTATUSENDPOINT = 'http://games.townofcarync.gov';
+const FIELDTYPES = ['/ballfields/ballfields.txt', '/multipurposefields/multipurposefields.txt', '/gymnasiums/gymnasiums.txt', '/soccerpark/soccerpark.txt', '/usabaseball/usabaseball.txt'];
+let instance = null;
 
 class FieldStatusHelper{
 
-  constructor(){}
+  constructor() {
+    if (instance) return instance;
+
+    instance = this;
+
+    return instance;
+  }
+
+  static getInstance() {
+    return instance || new SteamBot();
+  }
 
   get FIELDSTATUSENDPOINT() {
     return FIELDSTATUSENDPOINT;
@@ -42,12 +54,10 @@ promiseLoop(results, i){
   var helperClass = new HelperClass();
   var self = this;
   return this.requestFieldStatus(FIELDSTATUSENDPOINT + FIELDTYPES[i]).then(function(response){
-      return helperClass.addFieldResults(response.body, results);
+    return helperClass.addFieldResults(response.body, results);
   }).then(function(response){
-    results = response;
-    return counter(i);
-  }).then(function(response){
-    return (response >= FIELDTYPES.length) ? results : self.promiseLoop(results, response);
+    i++;
+    return (i >= FIELDTYPES.length) ? response : self.promiseLoop(response, i);
   });
 }
 

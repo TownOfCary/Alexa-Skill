@@ -59,24 +59,24 @@ describe('EventDataHelper', function() {
     context('With a date', function() {
       context('with one or more scheduled events', function() {
         it('Returns an event', function() {
-          /*this.timeout(5000);
+          this.timeout(5000);
           var startDate = '2017-03-24T00:00:00';
           var endDate = '2017-03-24T23:59:59';
           return subject.requestEventData(uri, startDate, endDate).then(function(response){
             expect(response.PagingList.Content[0].ID).to.eq(227);
-          });*/
+          });
         });
       });
-      // context('with no scheduled events', function() {
-      //   it('Returns a canned no events scheduled message', function() {
-      //     today = new Date('2017-03-23')
-      //     // var value = subject.requestEventData(uri).then(function(obj) {
-      //     //   return obj.PagingList.TotalResults.to.eventually.eq(0);
-      //     // });
-      //     var value = subject.requestEventData(uri)
-      //     return expect(value.PagingList.TotalResults).to.eq(0);
-      //   });
-      // });
+      context('with no scheduled events', function() {
+        it('Returns a canned no events scheduled message', function() {
+          today = new Date('2017-03-23')
+          // var value = subject.requestEventData(uri).then(function(obj) {
+          //   return obj.PagingList.TotalResults.to.eventually.eq(0);
+          // });
+          var value = subject.requestEventData(uri)
+          return expect(value.PagingList.TotalResults).to.eq(0);
+        });
+      });
     });
     // This test was used to make sure helper function was being called correctly inside another function
     // context('when #formatEventTitles called inside #formatEventData', function() {

@@ -1,8 +1,9 @@
 'use strict';
-var promise = require('bluebird');
-var RECYCLEYELLOWSTART = '2017-01-01';
-var RECYCLEBLUESTART = '2017-01-08';
-var CASESUBJECTPAIRINGS = {'YARD WASTE': 'COLLECTION', 'OIL': 'COLLECTION', 'CARDBOARD': 'COLLECTION', 'LEAF': 'COLLECTION', 'TRASH': 'MISSED', 'RECYCLING': 'MISSED', 'GARBAGE': 'MISSED', 'RUBBISH': 'MISSED', 'WASTE': 'MISSED', 'LEAVES': 'COLLECTION'};
+const promise = require('bluebird');
+const moment = require('moment-timezone');
+const RECYCLEYELLOWSTART = '2017-01-01';
+const RECYCLEBLUESTART = '2017-01-08';
+const CASESUBJECTPAIRINGS = {'YARD WASTE': 'COLLECTION', 'OIL': 'COLLECTION', 'CARDBOARD': 'COLLECTION', 'LEAF': 'COLLECTION', 'TRASH': 'MISSED', 'RECYCLING': 'MISSED', 'GARBAGE': 'MISSED', 'RUBBISH': 'MISSED', 'WASTE': 'MISSED', 'LEAVES': 'COLLECTION'};
 const FIELDNAMEPAIRINGS = {
 'MILLS PARK MIDDLE SCHOOL': 'MILLS PARK',
 'MILLS PARK MIDDLE': 'MILLS PARK',
@@ -58,9 +59,20 @@ const FIELDNAMEPAIRINGS = {
 'CARY ARTS CENTER': 'CARY ARTS CENTER',
 'CARY ARTS': 'CARY ARTS CENTER'};
 
+let instance = null;
 class HelperClass{
 
-  constructor(){ }
+  constructor() {
+    if (instance) return instance;
+
+    instance = this;
+
+    return instance;
+  }
+
+  static getInstance() {
+    return instance || new SteamBot();
+  }
 
 
 get FIELDNAMEPAIRINGS() {
@@ -73,11 +85,12 @@ get EVENTLOCATIONS() {
 
 //date formating functions to make a response sound better for alexa
 formatDate(date) {
-  var i = date.toString().search(/20\d{2}/);
+  console.log(date)
+  /*var i = date.toString().search(/20\d{2}/);
   if (i > 0) {
     return date.toString().slice(0, i).trim();
-  }
-  return date;
+  }*/
+  return moment(date).local().format('ddd MMM D');
 };
 
 formatDateTime(dateTime) {
@@ -88,13 +101,11 @@ formatDateTime(dateTime) {
 };
 
 formatTimeString(date) {
-  if ((typeof(date) !== 'object') || (date.constructor !== Date)) {
-    throw new Error('argument must be a Date object');
-  }
+
   function pad(s) { return (('' + s).length < 2 ? '0' : '') + s; }
   function fixHour(h) { return (h == 0 ? '12' : (h > 12 ? h - 12 : h)); }
-
-  var h = date.getHours(), m = date.getMinutes(), s = date.getSeconds(), timeStr = [pad(fixHour(h)), pad(m), pad(s)].join(':');
+  date = moment(date).tz('America/New_York');
+  var h = moment(date).hours(), m = moment(date).minutes(), s = moment(date).seconds(), timeStr = [pad(fixHour(h)), pad(m), pad(s)].join(':');
   return timeStr + ' ' + (h < 12 ? 'AM' : 'PM');
 };
 
@@ -175,8 +186,8 @@ getWeekendData(res) {
         var sundayIndex = 6;
         var weekNumber = res[1].substring(1);
 
-        var weekStart = w2date(res[0], weekNumber, saturdayIndex);
-        var weekEnd = w2date(res[0], weekNumber, sundayIndex);
+        var weekStart = this.w2date(res[0], weekNumber, saturdayIndex);
+        var weekEnd = this.w2date(res[0], weekNumber, sundayIndex);
 
         return Dates = {
             startDate: weekStart,

@@ -1,14 +1,26 @@
 'use strict';
-var _ = require('lodash');
-var rp = require('request-promise');
-var HelperClass = require('./helper_functions.js');
-
+const _ = require('lodash');
+const rp = require('request-promise');
+const moment = require('moment-timezone');
+const HelperClass = require('./helper_functions.js');
+let instance = null;
  class OpenDataHelper{
 
-   constructor(){}
+   constructor() {
+     if (instance) return instance;
+
+     instance = this;
+
+     return instance;
+   }
+
+   static getInstance() {
+     return instance || new SteamBot();
+   }
 
 requestOpenData(uri) {
   return this.getOpenData(uri).then(function(response) {
+    console.log(response.body);
     return response.body;
   }).catch(function (error) {
     console.log(error);
@@ -22,7 +34,7 @@ getOpenData(uri) {
     uri: encodeURI(uri),
     resolveWithFullResponse: true,
     json: true,
-    timeout: 3000
+    timeout: 5000
   };
   return rp(options);
 };
@@ -46,8 +58,8 @@ formatGymTimes(gymTimes) {
         prep: helperClass.getPrepostion(sortedGyms[key].length)
       });
       sortedGyms[key].forEach(function(item){
-        var startTime = new Date(item.open_gym_start);
-        var endTime = new Date(item.open_gym_end);
+        var startTime = item.open_gym_start.toString();
+        var endTime = item.open_gym_end.toString();
         times += _.template(' ${startTime} to ${endTime} for ${sport}.')({
           startTime: helperClass.formatTimeString(startTime),
           endTime: helperClass.formatTimeString(endTime),
@@ -58,11 +70,12 @@ formatGymTimes(gymTimes) {
   }
   if(gymTimes.records.length > 0) {
     var response = _.template('There ${prep} ${numTimes} open gym ${time} on ${date}.${times}');
+    console.log(gymTimes.records[0].fields.date_scanned);
     return response({
       prep: helperClass.getPrepostion(gymTimes.records.length),
       numTimes: gymTimes.records.length,
       time: gymTimes.records.length >= 2 ? 'times' : 'time',
-      date: helperClass.formatDate(Date.parse(gymTimes.records[0].fields.date_scanned)),
+      date: helperClass.formatDate(gymTimes.records[0].fields.date_scanned),
       times: times
     });
   } else {
@@ -86,11 +99,12 @@ formatStudioTimes(studioTimes) {
   });
   if(studioTimes.records.length > 0) {
     var response = _.template('There ${prep} ${numTimes} open studio ${time} on ${date} from${times}');
+    console.log(studioTimes.records[0].fields.date_scanned);
     return response({
       prep:  helperClass.getPrepostion(studioTimes.records.length),
       numTimes: studioTimes.records.length,
       time: studioTimes.records.length >= 2 ? 'times' : 'time',
-      date: helperClass.formatDate(Date.parse(studioTimes.records[0].fields.date_scanned)),
+      date: helperClass.formatDate(studioTimes.records[0].fields.date_scanned),
       times: times
     });
   } else {
@@ -107,7 +121,7 @@ formatNextStudioTime(studioTimes) {
     var startTime = new Date(studioTimes.records[0].fields.open_gym_start);
     var endTime = new Date(studioTimes.records[0].fields.open_gym_end);
     response = _.template('The next open studio time is on ${date} at ${gym} from ${startTime} to ${endTime}.')({
-      date: helperClass.formatDate(Date.parse(studioTimes.records[0].fields.date_scanned)),
+      date: helperClass.formatDate(studioTimes.records[0].fields.date_scanned),
       gym: helperClass.FIELDNAMEPAIRINGS[studioTimes.records[0].fields.facility_title.toUpperCase()],
       startTime: helperClass.formatTimeString(startTime),
       endTime: helperClass.formatTimeString(endTime),
