@@ -184,7 +184,7 @@ class EsriDataHelper {
     var nextTrash;
     //If trash day equals today
     if(Date.parse(trashDay).equals(Date.today())){
-     nextTrash = helperClass.formatDate(Date.parse(Date.today()));\
+     nextTrash = helperClass.formatDate(Date.parse(Date.today()));
     } else {
       nextTrash = helperClass.formatDate(Date.parse('next ' + trashDay));
     }
