@@ -23,6 +23,17 @@ var CASEISSUEMATCHING = {
 	'PICKUP LEAF': 'Leaf Collection',
 	'PICKUP LEAVES': 'Leaf Collection',
 
+	'PICK-UP YARD WASTE': 'Missed Trash',
+	'PICK-UP TRASH': 'Missed Trash',
+	'PICK-UP GARBAGE': 'Missed Trash',
+	'PICK-UP RUBBISH': 'Missed Trash',
+	'PICK-UP WASTE': 'Missed Trash',
+	'PICK-UP RECYCLING': 'Missed Trash',
+	'PICK-UP OIL': 'Oil Collection',
+	'PICK-UP CARDBOARD': 'Cardboard Collection',
+	'PICK-UP LEAF': 'Leaf Collection',
+	'PICK-UP LEAVES': 'Leaf Collection',
+
 	'UPGRADE YARD WASTE': 'Missed Trash',
 	'UPGRADE TRASH': 'Cart Exchange',
 	'UPGRADE GARBAGE': 'Cart Exchange',
@@ -95,19 +106,19 @@ class SalesforceHelper{
 
 	get ESRIENDPOINT() {
     return ESRIDATAENDPOINT;
-  };
+  }
 
 	get INSTANCE_URL() {
     return INSTANCE_URL;
-  };
+  }
 
 	get SALESFORCE_V() {
 		return SALESFORCE_V;
-	};
+	}
 
 	get CASEISSUEMATCHING() {
 		return CASEISSUEMATCHING;
-	};
+	}
 
 
 createCaseInSalesforce(userToken, caseIssue) {
@@ -121,7 +132,9 @@ createCaseInSalesforce(userToken, caseIssue) {
   return this.getContactId(userToken).then(function(results){
 			console.log('got contactId: ' + results);
       obj.ContactId = results
-      return conn.query("Select Id from Case_Issue__c where Name LIKE '%" + CASEISSUEMATCHING[caseIssue.toUpperCase()] + "%'");
+			var caseIssueMatch = !CASEISSUEMATCHING[caseIssue.toUpperCase()] ? caseIssue : CASEISSUEMATCHING[caseIssue.toUpperCase()]
+			console.log("Select Id from Case_Issue__c where Name LIKE '%" + caseIssueMatch + "%'");
+      return conn.query("Select Id from Case_Issue__c where Name LIKE '%" + caseIssueMatch + "%'");
 	}).then(function(results) {
 		var caseIssueRecord = results.records[0];
 		console.log('caseIssueRecord: ' + caseIssueRecord);
@@ -130,9 +143,10 @@ createCaseInSalesforce(userToken, caseIssue) {
 			return undefined;
 		} else {
 			obj.CaseIssue__c = caseIssueRecord.Id;
-			return conn.query("Select Id from RecordType where Name = 'public works case'");
+			return conn.query("Select Id from RecordType where Name = 'Work Request' AND SObjectType = 'Case'");
 		}
 	}).then(function(results) {
+		console.log(results);
     var recordType = results.records[0];
     obj.RecordTypeId = recordType.Id;
     return conn.sobject("Case").create(obj);
@@ -147,7 +161,7 @@ createCaseInSalesforce(userToken, caseIssue) {
     console.log('Error in case creation');
     console.log(err);
   });
-};
+}
 
 findLatestCaseStatus(userToken, caseIssue) {
 	var conn = new jsforce.Connection({
@@ -172,7 +186,7 @@ findLatestCaseStatus(userToken, caseIssue) {
     console.log('Error in case lookup');
     console.log(err);
   });
-};
+}
 
 findCaseStatus(userToken, caseNumber) {
 	var conn = new jsforce.Connection({
@@ -186,47 +200,45 @@ findCaseStatus(userToken, caseNumber) {
     console.log('Error in case lookup');
     console.log(err);
   });
-};
+}
 
 formatExistingCase(caseInfo) {
 	var response = {};
 	var helperClass = new HelperClass();
 	if (caseInfo.length > 0) {
-		var prompt = _.template('Your case for ${caseIssue} was last modified on ${lastModifiedDate}.'); // The status of your case is ${caseStatus}, and it
+		var prompt = _.template('Your case for ${caseIssue} has a current status of ${caseStatus}.  For more detailed information please call public works customer support at 919 469-4090');
 		var lmDate = Date.parse(caseInfo[0].LastModifiedDate).toString();
 	  response.prompt = prompt({
-			caseStatus: caseInfo[0].Status,
-			lastModifiedDate: helperClass.formatDateTime(Date.parse(caseInfo[0].LastModifiedDate)) //helperClass.formatDateTime(lmDate.slice(0, lmDate.indexOf('GMT')))
+			caseIssue: caseInfo[0].Case_Issue_Name__c,
+			caseStatus: caseInfo[0].Status
 		});
-		var card = _.template('Your case for ${caseIssue} has a case number of ${caseNumber}'); //  an expected completion date of ${finishDate}
+		var card = _.template('Your case for ${caseIssue} has a case number of ${caseNumber}');
 		response.card = card({
 			caseIssue: caseInfo[0].Case_Issue_Name__c,
-			caseNumber: caseInfo[0].CaseNumber,
-			finishDate: helperClass.formatDateTime(Date.parse(caseInfo[0].Expected_Completion_Date__c))
+			caseNumber: caseInfo[0].CaseNumber
 		});
 	} else {
 		response.prompt = 'I\'m sorry, but I could not find any previous cases on your account';
 		response.card = 'I\'m sorry, but I could not find any previous cases on your account';
 	}
 	return response;
-};
+}
 
 formatNewCaseStatus(caseInfo) {
 	var response = {};
 	var helperClass = new HelperClass();
-  var prompt = _.template('I\'ve created a new case for ${caseIssue}.  The case number is ${caseNumber}. You can view the case on your Alexa App.');
+  var prompt = _.template('I\'ve created a new case for ${caseIssue}.  The case number is ${caseNumber}. You can view the case information on your Alexa App.');
 	response.prompt = prompt({
 		caseIssue: caseInfo.Case_Issue_Name__c,
 		caseNumber: caseInfo.CaseNumber
 	});
-	var card = _.template('Your new case for ${caseIssue} has a case number of ${caseNumber}'); // an expected completion date of ${finishDate}
+	var card = _.template('Your new case for ${caseIssue} has a case number of ${caseNumber}');
 	response.card = card({
 		caseIssue: caseInfo.Case_Issue_Name__c,
-		caseNumber: caseInfo.CaseNumber,
-		finishDate: helperClass.formatDateTime(caseInfo.Expected_Completion_Date__c)
+		caseNumber: caseInfo.CaseNumber
 	});
 	return response;
-};
+}
 
 getUserAddress(userToken) {
 	console.log(INSTANCE_URL);
@@ -255,7 +267,7 @@ getUserAddress(userToken) {
 		console.log('Error in retrieving address');
     console.log(err);
 	});
-};
+}
 
 getTownHallHours(userToken, date) {
 	var conn = new jsforce.Connection({
@@ -279,7 +291,7 @@ getTownHallHours(userToken, date) {
 		console.log('error here somehow');
 		console.log(err);
 	});
-};
+}
 
 formatTownHallHours(timeInfo, date) {
 	var prompt = '';
@@ -296,7 +308,7 @@ formatTownHallHours(timeInfo, date) {
 		});
 	}
 	return prompt;
-};
+}
 
 getContactId(userToken){
   var options = {

@@ -40,7 +40,7 @@ requestRSSFeed() {
   }).catch( (error) => {
     console.log('error: ', error);
   });
-};
+}
 
 formatRSSFeed(feedData) {
   var response = 'The latest Town of Cary News today: ';
@@ -54,6 +54,6 @@ formatRSSFeed(feedData) {
     });
   }
   return response = response.replace('Town of Cary\'s Weekend Update', 'Please check Town of Cary dot O R G for the Weekend update');
-};
+}
 }
 module.exports = RSSFeedHelper;

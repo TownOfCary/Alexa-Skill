@@ -26,7 +26,7 @@ requestOpenData(uri) {
     console.log(error);
     console.log('error in the promise');
   });
-};
+}
 
 getOpenData(uri) {
   var options = {
@@ -37,7 +37,7 @@ getOpenData(uri) {
     timeout: 5000
   };
   return rp(options);
-};
+}
 
 formatGymTimes(gymTimes) {
   var times = '';
@@ -82,7 +82,7 @@ formatGymTimes(gymTimes) {
     var response = 'There are no open gym times for that date.';
     return response
   }
-};
+}
 
 formatStudioTimes(studioTimes) {
   var times = '';
@@ -111,7 +111,7 @@ formatStudioTimes(studioTimes) {
     var response = 'There are no open studio times for that date.';
     return response
   }
-};
+}
 
 formatNextStudioTime(studioTimes) {
   var times = '';
@@ -130,7 +130,7 @@ formatNextStudioTime(studioTimes) {
     response = "There is a problem with the connection to the open dates.  Please try again later."
   }
   return response;
-};
+}
 
 formatMayor(cityInfo) {
   var response = '';
@@ -144,7 +144,7 @@ formatMayor(cityInfo) {
   } else {
     return response;
   }
-};
+}
 
 formatAllCouncilMembers(cityInfo) {
   var response = '';
@@ -174,7 +174,7 @@ formatAllCouncilMembers(cityInfo) {
   } else {
     return response;
   }
-};
+}
 
 formatAtLargeCouncilMembers(cityInfo) {
   var response = '';
@@ -196,7 +196,7 @@ formatAtLargeCouncilMembers(cityInfo) {
   } else {
     return response;
   }
-};
+}
 }
 
 module.exports = OpenDataHelper;

@@ -26,11 +26,11 @@ class FieldStatusHelper{
 
   get FIELDSTATUSENDPOINT() {
     return FIELDSTATUSENDPOINT;
-  };
+  }
 
   get FIELDTYPES() {
     return FIELDTYPES;
-  };
+  }
 
 
 getAllFieldStatus(){

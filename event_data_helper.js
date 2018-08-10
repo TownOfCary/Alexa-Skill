@@ -30,7 +30,7 @@ class EventDataHelper {
       console.log('Error in api call');
       console.log(err);
     });
-  };
+  }
 
   calendarEventFind(uri, startDate, endDate){
     var options = { method: 'POST',

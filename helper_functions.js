@@ -3,6 +3,8 @@ const promise = require('bluebird');
 const moment = require('moment-timezone');
 const RECYCLEYELLOWSTART = '2017-01-01';
 const RECYCLEBLUESTART = '2017-01-08';
+const TRASHCASES = {'trash': 'trash', 'garbage': 'trash', 'rubbish': 'trash', 'waste': 'trash'};
+const LEAFCASES = {'leaf': 'leaf', 'leaves': 'leaf'};
 const CASESUBJECTPAIRINGS = {'YARD WASTE': 'COLLECTION', 'OIL': 'COLLECTION', 'CARDBOARD': 'COLLECTION', 'LEAF': 'COLLECTION', 'TRASH': 'MISSED', 'RECYCLING': 'MISSED', 'GARBAGE': 'MISSED', 'RUBBISH': 'MISSED', 'WASTE': 'MISSED', 'LEAVES': 'COLLECTION'};
 const FIELDNAMEPAIRINGS = {
 'MILLS PARK MIDDLE SCHOOL': 'MILLS PARK',
@@ -77,11 +79,18 @@ class HelperClass{
 
 get FIELDNAMEPAIRINGS() {
   return FIELDNAMEPAIRINGS;
-};
+}
 
 get EVENTLOCATIONS() {
   return EVENTLOCATIONS;
-};
+}
+
+get TRASHCASES() {
+  return TRASHCASES;
+}
+get LEAFCASES() {
+  return LEAFCASES;
+}
 
 //date formating functions to make a response sound better for alexa
 formatDate(date) {
@@ -91,14 +100,14 @@ formatDate(date) {
     return date.toString().slice(0, i).trim();
   }*/
   return moment(date).local().format('ddd MMM D');
-};
+}
 
 formatDateTime(dateTime) {
   if (dateTime !== null && dateTime !== undefined){
     return this.formatDate(dateTime) + ' at ' +  this.formatTimeString(dateTime);
   }
   return null;
-};
+}
 
 formatTimeString(date) {
 
@@ -107,12 +116,12 @@ formatTimeString(date) {
   date = moment(date).tz('America/New_York');
   var h = moment(date).hours(), m = moment(date).minutes(), s = moment(date).seconds(), timeStr = [pad(fixHour(h)), pad(m), pad(s)].join(':');
   return timeStr + ' ' + (h < 12 ? 'AM' : 'PM');
-};
+}
 
 formatAddress(fullAddress) {
   var sliceIndex = fullAddress.toUpperCase().search('CARY') || fullAddress.toUpperCase().search('APEX') || fullAddress.toUpperCase().search('MORRISVILLE');
 	return fullAddress.slice(0, sliceIndex - 1).trim();
-};
+}
 
 getRecycleDay(cycle, trashDay) {
   var diff;
@@ -128,7 +137,7 @@ getRecycleDay(cycle, trashDay) {
   } else {
     return this.formatDate(Date.parse('next ' + trashDay));
   }
-};
+}
 
 getCircleCoords(x,y,d) {
   var tao = 2 * Math.PI;
@@ -143,13 +152,22 @@ getCircleCoords(x,y,d) {
     results.push("[" + (long / (Math.PI / 180)).toString() + "," + (lat / (Math.PI / 180)).toString() + "]");
   }
   return results;
-};
+}
 
 addLeadZeros(caseNumber, caseNumberLength) {
   var filler = '0';
   var results = filler.repeat(caseNumberLength - caseNumber.length).concat(caseNumber);
   return results.valueOf();
-};
+}
+
+formatCaseSubject(caseSubject){
+  var tempSubject = TRASHCASES[caseSubject] || LEAFCASES[caseSubject];
+  if (tempSubject === undefined) {
+    return caseSubject;
+  } else {
+    return tempSubject;
+  }
+}
 
 addCaseAction(caseSubject){
   if(caseSubject !== undefined){
@@ -157,7 +175,7 @@ addCaseAction(caseSubject){
   } else {
     return caseSubject;
   }
-};
+}
 
 addFieldResults(body, results) {
   var lines = body.toString().split("\n");
@@ -177,7 +195,7 @@ addFieldResults(body, results) {
     }
   }
   return results;
-};
+}
 
 //next two functions are from Amazon's calendar reader on github used to parse the Amazon.Date slot type.
 getWeekendData(res) {
@@ -207,7 +225,7 @@ w2date(year, wn, dayNb) {
         j4 = new Date(year, 0, 4, 12, 0, 0),
         mon1 = j4.getTime() - j10.getDay() * day;
     return new Date(mon1 + ((wn - 1) * 7 + dayNb) * day);
-};
+}
 
 }
 module.exports = HelperClass;

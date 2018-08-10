@@ -32,30 +32,30 @@ class EsriDataHelper {
   }
   get EVENTDATAENDPOINT() {
     return EVENTDATAENDPOINT;
-  };
+  }
 
   get ESRIENDPOINT() {
     return ESRIENDPOINT;
-  };
+  }
 
 
   get EARTHRADIUS() {
     return EARTHRADIUS;
-  };
+  }
 
 
   get RECYCLEYELLOWSTART() {
     return RECYCLEYELLOWSTART;
-  };
+  }
 
 
   get RECYCLEBLUESTART() {
     return RECYCLEBLUESTART;
-  };
+  }
 
   get DAYS() {
     return DAYS;
-  };
+  }
 
   requestAddressInformation(address) {
     var self = this;
@@ -67,7 +67,7 @@ class EsriDataHelper {
           console.log('error in the promise');
       }
     ).catch(console.log.bind(console));
-  };
+  }
 
   getAddressGeolocation(address) {
     var uri = ESRIENDPOINT + 'Locators/Cary_Com_Locator/GeocodeServer/findAddressCandidates?Street=' + address + '&City=&State=&ZIP=&SingleLine=&outFields=*&maxLocations=&outSR=4326&searchExtent=&f=pjson';
@@ -80,7 +80,7 @@ class EsriDataHelper {
       timeout: 3000
     };
     return rp(options);
-  };
+  }
 
   requestESRIInformation(uri) {
     return this.getESRIInformation(uri).then(
@@ -90,7 +90,7 @@ class EsriDataHelper {
           console.log('error in the promise');
       }
     ).catch(console.log.bind(console));
-  };
+  }
 
   getESRIInformation(uri) {
     var options = {
@@ -101,7 +101,7 @@ class EsriDataHelper {
       timeout: 3000
     };
     return rp(options);
-  };
+  }
 
   requestInformationByRadius(x, y, distance, uri) {
     return this.getInformationByRadius(x, y, distance, uri).then(
@@ -111,7 +111,7 @@ class EsriDataHelper {
           console.log('error in the promise');
       }
     ).catch(console.log.bind(console));
-  };
+  }
 
   getInformationByRadius(x, y, distance, uri) {
     //radius of earth is 3959 miles
@@ -127,7 +127,7 @@ class EsriDataHelper {
       timeout: 3000
     };
     return rp(options);
-  };
+  }
 
   formatMyCouncilMember(councilInfo) {
     var prompt = '';
@@ -143,19 +143,24 @@ class EsriDataHelper {
       }
     });
     return prompt;
-  };
+  }
 
   formatNearbyParks(parkInfo) {
     var helperClass = new HelperClass();
-    var prompt = 'There are ' + parkInfo.features.length + ' parks nearby including ';
-    parkInfo.features.forEach(function(item){
-      prompt += _.template('${parkName} located at ${address}, ')({
-        parkName: item.attributes["NAME"],
-        address: helperClass.formatAddress(item.attributes["FULLADDR"])
+    var prompt;
+    if (parkInfo.features.length <= 0) {
+      prompt = "There are no nearby parks";
+    } else {
+      var prompt = 'There are ' + parkInfo.features.length + ' parks nearby including ';
+      parkInfo.features.forEach(function(item){
+        prompt += _.template('${parkName} located at ${address}, ')({
+          parkName: item.attributes["NAME"],
+          address: helperClass.formatAddress(item.attributes["FULLADDR"])
+        });
       });
-    });
+    }
     return prompt;
-  };
+  }
 
   formatNearbyPublicArt(artInfo) {
     var helperClass = new HelperClass();
@@ -175,7 +180,7 @@ class EsriDataHelper {
       num: numArt
     }) + prompt;
     return prompt;
-  };
+  }
 
   formatMyTrashDay(trashInfo) {
     var helperClass = new HelperClass();
@@ -192,7 +197,7 @@ class EsriDataHelper {
     var prompt = '';
 
     console.log('The two days trash first');
-    console.log(nextDays);
+    console.log(nextTrash);
     console.log(nextRecycle);
     if(nextRecycle == nextTrash){
       prompt = _.template('Your next trash and recycle day is ${nextTrash}')({
@@ -205,7 +210,7 @@ class EsriDataHelper {
       });
     }
     return prompt;
-  };
+  }
 
   /*checkTrashDays(NextDays) {
     var helperClass = new HelperClass();
@@ -259,7 +264,7 @@ class EsriDataHelper {
       console.log(NextDays);
       return NextDays;
     }
-  };*/
+  }*/
 }
 
 module.exports = EsriDataHelper;
