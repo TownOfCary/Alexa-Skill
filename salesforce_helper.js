@@ -276,6 +276,7 @@ getTownHallHours(userToken, date) {
 		version: SALESFORCE_V
 	});
 
+	var body = { incDate: date };
 	return conn.query('Select ActivityDate from Holiday').then(function(response) {
 		if(!Date.parse(date).is().weekday()){
 			return {closed: true};
