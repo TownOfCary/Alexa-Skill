@@ -280,7 +280,10 @@ getTownHallHours(userToken, date) {
 		if(!Date.parse(date).is().weekday()){
 			return {closed: true};
 		} else {
+			console.log('activity dates');
+			console.log(response.records);
 			for(var i = 0; i < response.records.length; i++){
+				console.log(response.records[i].ActivityDate);
 				if(response.records[i].ActivityDate == date){
 					return {closed: true};
 				}
