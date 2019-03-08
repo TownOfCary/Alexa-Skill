@@ -28,8 +28,11 @@ describe('RSSFeedHelper', function() {
     context('with a valid rss feed', function() {
       it('returns the parsed rss object', function() {
         this.timeout(10000);
+        var now = Date.now();
         return subject.requestRSSFeed().then(function(response) {
-          expect(response).to.be.a('array');
+          // console.log(response);
+          console.log(Date.now() - now);
+          return expect(response).to.be.a('array');
         });
       });
     });
@@ -39,9 +42,9 @@ describe('RSSFeedHelper', function() {
     context('with valid utterance from user', function() {
       it('returns the latest RSS feed', function() {
         var value = subject.formatRSSFeed(sampleReturnWithEvents)
-        // console.log(sampleReturnWithEvents[0].title);
-        // console.log(value);
-        expect(value).to.include('The latest Town of Cary News today:');
+        console.log(sampleReturnWithEvents[0].title);
+        console.log(value);
+        return expect(value).to.include('The latest Town of Cary News today:');
       });
     });
     // context('with a blank rss feed response', function() {

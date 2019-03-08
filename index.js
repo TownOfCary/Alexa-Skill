@@ -12,6 +12,7 @@ var HelperClass = require('./helper_functions.js');
 var EventDataHelper = require('./event_data_helper');
 var rp = require('request-promise');
 var RSSFeedHelper = require('./rss_feed_helper');
+var TwitterHelper = require('./twitter_helper');
 require('./jsDate.js')();
 
 
@@ -407,6 +408,24 @@ var newSessionHandlers = {
 
     rssFeedHelper.requestRSSFeed().then(function(response) {
       return rssFeedHelper.formatRSSFeed(response);
+    }).then(function(response) {
+      prompt = scrub(response);
+      sendOutput(self, ':tell', prompt);
+    }).catch(function(err){
+      prompt = 'I\'m sorry, there seems to be a problem with the connection right now.';
+      console.log(err);
+      sendOutput(self, ':tell', prompt);
+    });
+  },
+
+  'TwitterIntent': function() {
+    var prompt = '';
+    console.log('IN TWITTER INTENT');
+    var twitter_helper = new TwitterHelper();
+    var self = this;
+
+    twitter_helper.getTweets().then(function(response) {
+      return twitter_helper.formatTweets(response);
     }).then(function(response) {
       prompt = scrub(response);
       sendOutput(self, ':tell', prompt);
