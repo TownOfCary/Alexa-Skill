@@ -425,7 +425,7 @@ var newSessionHandlers = {
     var self = this;
 
     twitter_helper.getTweets().then(function(response) {
-      return twitter_helper.formatTweets(response);
+      return twitter_helper.formatTweets(JSON.parse(response));
     }).then(function(response) {
       prompt = scrub(response);
       sendOutput(self, ':tell', prompt);
@@ -434,6 +434,11 @@ var newSessionHandlers = {
       console.log(err);
       sendOutput(self, ':tell', prompt);
     });
+  },
+
+  'PodBayIntent': function() {
+    var prompt = 'I\'m sorry Dave.  I\'m afraid I can\'t do that.';
+    sendOutput(this, ':tell', prompt);
   },
 
   'AMAZON.RepeatIntent': function () {

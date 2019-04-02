@@ -63,6 +63,9 @@ describe('EventDataHelper', function() {
           var startDate = '2017-03-24T00:00:00';
           var endDate = '2017-03-24T23:59:59';
           return subject.requestEventData(uri, startDate, endDate).then(function(response){
+            console.log('got data back');
+            console.log(process.env.VISIONAPPKEY);
+            console.log(response);
             expect(response.PagingList.Content[0].ID).to.eq(227);
           });
         });

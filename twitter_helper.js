@@ -63,11 +63,12 @@ class TwitterHelper{
   }
 
   formatTweets(tweetData) {
+    console.log(tweetData);
     var response = 'The latest Town of Cary Tweets: ';
-    feedData.forEach(function(item) {
+    tweetData.forEach(function(item) {
       response += _.template("From ${date}, ${text}. ")({
         date: item.created_at,
-        rssTitle: item.full_text
+        text: item.full_text
       });
     });
     return response;

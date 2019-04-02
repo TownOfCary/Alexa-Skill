@@ -17,14 +17,14 @@ class EventDataHelper {
     var helperClass = new HelperClass();
     return this.calendarEventFind(uri, startDate, endDate).then(function(response) {
       console.log('got response back');
-      console.log(response);
       var json = JSON.parse(response);
+      console.log(json.PagingList.Content.length);
       // json.PagingList.Content.forEach(function(item){
       //   item.Location = helperClass.EVENTLOCATIONS[item.CategoryID];
       // });
       // return json;
       console.log(response);
-      console.log(json);
+
       return self.promiseWhile(uri, json, 0);
     }).catch(function(err) {
       console.log('Error in api call');
@@ -50,9 +50,7 @@ class EventDataHelper {
         StartDate: startDate
      }
     };
-    console.log(options)
     var sign = this.signAPIRequest(options.form).toUpperCase();
-    console.log(sign);
     options.form._sign = sign;
     return rp(options);
   }
@@ -90,11 +88,9 @@ class EventDataHelper {
     var self = this;
     return this.calendarEventGet(uri, results.PagingList.Content[i].ID).then(function(response) {
       var json = JSON.parse(response);
-      results.PagingList.Content[i].Location = json.Event.Categories[0].Name
-      return self.counter(i)
-    }).then(function(response) {
-      //using a hard stop of 6 here until the vision api is updated to include the location
-      return (response >= results.PagingList.Content.length || response >= 5) ? results : self.promiseWhile(uri, results, response)
+      results.PagingList.Content[i].Location = json.Event.Categories[0].Name;
+      i++;
+      return (i >= results.PagingList.Content.length || i >= 5) ? results : self.promiseWhile(uri, results, i);
     }).catch(function(err){
       console.log('error on get api call');
       console.log(err);
